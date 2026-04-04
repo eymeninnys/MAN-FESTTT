@@ -3,51 +3,49 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Manifest Quiz - ManiFan Deluxe</title>
+<title>Manifest Quiz - ManiFan Max</title>
 <style>
 body {
-    font-family: 'Arial', sans-serif;
-    background-image: url('arkaplan.jpg');
-    background-size: cover;
-    background-position: center;
-    margin:0;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
+  font-family: 'Arial', sans-serif;
+  background-image: url('arkaplan.jpg');
+  background-size: cover;
+  background-position: center;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 #quiz-container {
-    background-color: rgba(255,255,255,0.95);
-    padding:30px;
-    border-radius:15px;
-    box-shadow:0 10px 30px rgba(0,0,0,0.3);
-    width:90%;
-    max-width:550px;
-    text-align:center;
-    position:relative;
+  background: rgba(255,255,255,0.95);
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  width: 90%;
+  max-width: 600px;
+  text-align: center;
+  position: relative;
 }
-h2 { margin-bottom:18px; }
+h2 { margin-bottom: 15px; }
 .option-btn {
-    display:block;
-    width:100%;
-    padding:12px;
-    margin:10px 0;
-    border:none;
-    border-radius:10px;
-    background-color:#4CAF50;
-    color:#fff;
-    font-size:16px;
-    cursor:pointer;
-    transition:0.3s;
+  display: block;
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 8px;
+  background-color: #4CAF50;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: .3s;
 }
-.option-btn:hover { transform:scale(1.05); }
-.option-btn.correct { background-color:#4CAF50; animation: flash 0.5s; }
-.option-btn.wrong { background-color:#f44336; animation: shake 0.5s; }
-#score-bar, #timer { font-size:18px; margin-bottom:12px; font-weight:bold; }
+.option-btn:hover { transform: scale(1.05); }
+.option-btn.correct { background-color: #4CAF50; }
+.option-btn.wrong { background-color: #f44336; }
+#score-bar, #timer { font-size: 18px; margin-bottom: 12px; font-weight: bold; }
 #question-number { position:absolute; top:12px; right:18px; font-weight:bold; }
 #result { font-size:22px; margin-top:20px; display:none; font-weight:bold; }
-@keyframes shake { 0%{transform:translateX(0);}25%{transform:translateX(-6px);}50%{transform:translateX(6px);}75%{transform:translateX(-6px);}100%{transform:translateX(0);} }
-@keyframes flash { 0%{opacity:0.5;}50%{opacity:1;}100%{opacity:1;} }
 </style>
 </head>
 <body>
@@ -62,22 +60,35 @@ h2 { margin-bottom:18px; }
   <div id="result"></div>
 </div>
 
+<audio id="correctSound" src="correct.mp3"></audio>
+<audio id="wrongSound" src="wrong.mp3"></audio>
+
 <script>
-// Gelişmiş Manifest soruları
+// Sorular
 let sorular = [
-  {soru:"Manifest grubu kaç kişiden oluşur?", a:"5", b:"6", dogru:"b"},
-  {soru:"Manifest hangi yarışma ile kuruldu?", a:"O Ses Türkiye", b:"Big5 Türkiye", dogru:"b"},
-  {soru:"Manifest’in ilk single’ı hangisidir?", a:"Zamansızdık", b:"Snap", dogru:"a"},
-  {soru:"Manifest’in ilk albümünün adı nedir?", a:"Dreamland", b:"Manifestival", dogru:"b"},
-  {soru:"Manifest çıkışını hangi yıl yaptı?", a:"2025", b:"2020", dogru:"a"},
-  {soru:"Aşağıdakilerden hangisi üye değildir?", a:"Zeynep Sude Oktay", b:"Hadise", dogru:"a"},
-  {soru:"Manifest hayran kitlesine ne denir?", a:"maniFAM", b:"maniFANS", dogru:"a"},
-  {soru:"Manifest’in iki single’ıdan biri hangisidir?", a:"Arıyo", b:"Hej", dogru:"a"},
-  {soru:"Manifest grup türü nedir?", a:"Pop / R&B", b:"Rock", dogru:"a"},
-  {soru:"Manifest’in çıkış konserini nerede yaptı?", a:"Jolly Joker Arena", b:"Zorlu PSM", dogru:"a"}
+{ soru:"Manifest grubu kaç kişiden oluşur?", a:"5", b:"6", dogru:"b"},
+{ soru:"Manifest hangi yarışma ile kuruldu?", a:"O Ses Türkiye", b:"Big5 Türkiye", dogru:"b"},
+{ soru:"Manifest’in ilk single’ı hangisidir?", a:"Zamansızdık", b:"Snap", dogru:"a"},
+{ soru:"Manifest’in ilk albümünün adı nedir?", a:"Dreamland", b:"Manifestival", dogru:"b"},
+{ soru:"Manifest çıkışını hangi yıl yaptı?", a:"2025", b:"2020", dogru:"a"},
+{ soru:"Aşağıdakilerden hangisi grup üyesidir?", a:"Zeynep Sude Oktay", b:"Hadise", dogru:"a"},
+{ soru:"Hayran kitlesine ne denir?", a:"maniFAM", b:"maniFANS", dogru:"a"},
+{ soru:"Manifest’in yayınladığı bir single nedir?", a:"Arıyo", b:"Hej", dogru:"a"},
+{ soru:"Manifest’in türü nedir?", a:"Pop / R&B", b:"Rock", dogru:"a"},
+{ soru:"Manifest’in ilk konseri hangi şehirdeydi?", a:"İstanbul", b:"Ankara", dogru:"a"},
+{ soru:"Manifest’in menajeri kimdir?", a:"Mustafa K.", b:"Ali V.", dogru:"a"},
+{ soru:"Manifest’in resmi fan kulübü adı?", a:"ManiClub", b:"ManiFans", dogru:"b"},
+{ soru:"Manifest’in albüm kapağı rengi hangisi?", a:"Siyah", b:"Beyaz", dogru:"a"},
+{ soru:"Manifest’in kuruluş şehri?", a:"İzmir", b:"İstanbul", dogru:"b"},
+{ soru:"Manifest’in popüler şarkısı hangisi?", a:"Zamansızdık", b:"Snap", dogru:"a"},
+{ soru:"Manifest ilk ödülünü ne zaman aldı?", a:"2026", b:"2027", dogru:"a"},
+{ soru:"Manifest’in vokalisti kimdir?", a:"Zeynep", b:"Mina", dogru:"b"},
+{ soru:"Manifest’in dansçısı var mı?", a:"Evet", b:"Hayır", dogru:"a"},
+{ soru:"Manifest’in bir mini albümü var mı?", a:"Evet", b:"Hayır", dogru:"b"},
+{ soru:"Manifest’in klip yönetmeni kimdir?", a:"Serkan", b:"Burak", dogru:"a"}
 ];
 
-let currentQuestion=0,score=0,timeLeft=10, timerInterval;
+let currentQuestion=0, score=0, timeLeft=10, timerInterval;
 
 const qNum = document.getElementById("question-number");
 const timerDisplay = document.getElementById("time");
@@ -86,6 +97,8 @@ const aBtn = document.getElementById("a");
 const bBtn = document.getElementById("b");
 const scoreBar = document.getElementById("score-bar");
 const resultEl = document.getElementById("result");
+const correctSound = document.getElementById("correctSound");
+const wrongSound = document.getElementById("wrongSound");
 
 function loadQuestion(){
   let q=sorular[currentQuestion];
@@ -104,62 +117,54 @@ function loadQuestion(){
   timerInterval=setInterval(()=>{
     timeLeft--;
     timerDisplay.textContent=timeLeft;
-    if(timeLeft<=0){
-      clearInterval(timerInterval);
-      checkAnswer(null);
+    if(timeLeft<=0){ 
+      clearInterval(timerInterval); 
+      checkAnswer(null); 
     }
   },1000);
 }
 
-function checkAnswer(selectedBtn){
+function checkAnswer(btn){
   clearInterval(timerInterval);
+  aBtn.disabled=true; bBtn.disabled=true;
   let correct=sorular[currentQuestion].dogru;
-  aBtn.disabled=true;
-  bBtn.disabled=true;
 
-  if(selectedBtn && selectedBtn==correct){
-    if(selectedBtn=="a") aBtn.classList.add("correct");
-    else bBtn.classList.add("correct");
-    score++;
+  if(btn===correct){
+    document.getElementById(btn).classList.add("correct");
+    correctSound.play(); score++;
   } else {
-    if(selectedBtn){
-      if(selectedBtn=="a") aBtn.classList.add("wrong");
-      else bBtn.classList.add("wrong");
-    }
-    if(correct=="a") aBtn.classList.add("correct");
-    else bBtn.classList.add("correct");
+    if(btn) document.getElementById(btn).classList.add("wrong");
+    document.getElementById(correct).classList.add("correct");
+    wrongSound.play();
   }
+
   scoreBar.textContent=`Puan: ${score}`;
 
   setTimeout(()=>{
     currentQuestion++;
     if(currentQuestion<sorular.length) loadQuestion();
     else showResult();
-  },1500);
+  },1200);
 }
 
 function showResult(){
-  questionEl.style.display="none";
-  aBtn.style.display="none";
-  bBtn.style.display="none";
-  qNum.style.display="none";
-  timerDisplay.parentElement.style.display="none";
+  questionEl.style.display="none"; aBtn.style.display="none"; bBtn.style.display="none";
+  qNum.style.display="none"; timerDisplay.parentElement.style.display="none";
 
-  let grade="";
-  if(score>=9) grade="Elite ManiFan ⭐️";
-  else if(score>=7) grade="Pro ManiFan 🌟";
-  else if(score>=5) grade="ManiFan 👍";
-  else grade="Yeni ManiFan 👶";
+  let lvl="";
+  if(score>=18) lvl="⚡ Legend ManiFan";
+  else if(score>=15) lvl="🔥 Hero ManiFan";
+  else if(score>=12) lvl="🌟 Super ManiFan";
+  else lvl="✨ ManiFan Starter";
 
   resultEl.style.display="block";
-  resultEl.innerHTML=`🎉 Quiz Bitti!<br>Puan: ${score}/${sorular.length}<br>Seviyen: <b>${grade}</b>`;
+  resultEl.innerHTML=`🎉 Quiz Bitti!<br>Skor: ${score}/${sorular.length}<br>Senin Seviyen: <b>${lvl}</b>`;
 }
 
 aBtn.addEventListener("click",()=>checkAnswer("a"));
 bBtn.addEventListener("click",()=>checkAnswer("b"));
-
 loadQuestion();
-</script>
 
+</script>
 </body>
 </html>
