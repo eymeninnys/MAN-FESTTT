@@ -3,60 +3,80 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Manifest Quiz</title>
+<title>Manifest Quiz - ManiFan</title>
 <style>
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
     background-image: url('arkaplan.jpg');
     background-size: cover;
     background-position: center;
-    background-repeat: no-repeat;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
+    margin:0;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
 }
+
 #quiz-container {
-    background-color: rgba(255,255,255,0.9);
-    padding: 30px 40px;
-    border-radius: 12px;
-    box-shadow: 0px 5px 20px rgba(0,0,0,0.2);
-    width: 90%;
-    max-width: 500px;
-    text-align: center;
+    background-color: rgba(255,255,255,0.95);
+    padding:30px 40px;
+    border-radius:15px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.3);
+    width:90%;
+    max-width:500px;
+    text-align:center;
+    position:relative;
 }
-h2 { margin-bottom: 20px; }
+
+h2 { margin-bottom:20px; }
 .option-btn {
-    display: block;
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border: none;
-    border-radius: 8px;
-    background-color: #4CAF50;
-    color: #fff;
-    font-size: 16px;
-    cursor: pointer;
-    transition: 0.3s;
+    display:block;
+    width:100%;
+    padding:12px;
+    margin:10px 0;
+    border:none;
+    border-radius:10px;
+    background-color:#4CAF50;
+    color:#fff;
+    font-size:16px;
+    cursor:pointer;
+    transition:0.3s;
 }
-.option-btn:hover { background-color: #45a049; }
-.option-btn.correct { background-color: #4CAF50; } /* yeşil */
-.option-btn.wrong { background-color: #f44336; }   /* kırmızı */
-#score {
-    font-size: 20px;
-    margin-top: 20px;
-    font-weight: bold;
+.option-btn:hover { transform:scale(1.05); }
+.option-btn.correct { background-color:#4CAF50; animation: flash 0.5s; }
+.option-btn.wrong { background-color:#f44336; animation: shake 0.5s; }
+
+#score-bar {
+    font-size:18px;
+    margin-bottom:10px;
+    font-weight:bold;
+}
+#question-number { position:absolute; top:10px; right:20px; font-weight:bold; }
+#result { font-size:20px; margin-top:20px; display:none; font-weight:bold; }
+
+@keyframes shake {
+  0% { transform: translateX(0px); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+  100% { transform: translateX(0px); }
+}
+@keyframes flash {
+  0% { opacity:0.5; }
+  50% { opacity:1; }
+  100% { opacity:1; }
 }
 </style>
 </head>
 <body>
 
 <div id="quiz-container">
+  <div id="question-number">Soru 1 / 7</div>
+  <div id="score-bar">Puan: 0</div>
   <h2 id="question">Soru Yükleniyor...</h2>
   <button class="option-btn" id="a">Seçenek A</button>
   <button class="option-btn" id="b">Seçenek B</button>
-  <div id="score" style="display:none;">Puan: 0</div>
+  <div id="result"></div>
 </div>
 
 <script>
@@ -76,7 +96,9 @@ let score = 0;
 const questionEl = document.getElementById("question");
 const aBtn = document.getElementById("a");
 const bBtn = document.getElementById("b");
-const scoreEl = document.getElementById("score");
+const scoreBar = document.getElementById("score-bar");
+const questionNumber = document.getElementById("question-number");
+const resultEl = document.getElementById("result");
 
 function loadQuestion() {
     let q = sorular[currentQuestion];
@@ -84,51 +106,54 @@ function loadQuestion() {
     aBtn.textContent = "A: " + q.a;
     bBtn.textContent = "B: " + q.b;
 
-    // Buton sınıflarını sıfırla
     aBtn.className = "option-btn";
     bBtn.className = "option-btn";
 
-    // Butonları aktif yap
     aBtn.disabled = false;
     bBtn.disabled = false;
+
+    questionNumber.textContent = `Soru ${currentQuestion + 1} / ${sorular.length}`;
 }
 
 function checkAnswer(selectedBtn, selectedKey) {
     let correctKey = sorular[currentQuestion].dogru;
-
-    // Tüm butonları pasif yap
     aBtn.disabled = true;
     bBtn.disabled = true;
 
-    if(selectedKey === correctKey) {
+    if(selectedKey === correctKey){
         selectedBtn.classList.add("correct");
         score++;
+        scoreBar.textContent = `Puan: ${score}`;
     } else {
         selectedBtn.classList.add("wrong");
-        // doğru cevabı yeşile boyayalım
-        if(correctKey === "a") aBtn.classList.add("correct");
+        if(correctKey==="a") aBtn.classList.add("correct");
         else bBtn.classList.add("correct");
     }
 
-    // 1 saniye sonra otomatik geç
     setTimeout(() => {
         currentQuestion++;
         if(currentQuestion < sorular.length) loadQuestion();
-        else showScore();
+        else showResult();
     }, 1000);
 }
 
-function showScore() {
-    questionEl.textContent = "Quiz bitti!";
-    aBtn.style.display = "none";
-    bBtn.style.display = "none";
-    scoreEl.style.display = "block";
-    scoreEl.textContent = "Toplam Puan: " + score + "/" + sorular.length;
+function showResult(){
+    questionEl.style.display="none";
+    aBtn.style.display="none";
+    bBtn.style.display="none";
+    questionNumber.style.display="none";
+    let maniFan = "";
+    if(score===7) maniFan = "100V ManiFan 🌟";
+    else if(score>=5) maniFan = "80V ManiFan ✨";
+    else if(score>=3) maniFan = "50V ManiFan ⚡";
+    else maniFan = "Başlangıç ManiFan 🔹";
+
+    resultEl.style.display="block";
+    resultEl.innerHTML = `Quiz bitti!<br>Toplam Puan: ${score}/${sorular.length}<br>Senin ManiFan Seviyen: <b>${maniFan}</b>`;
 }
 
-// Event listeners
-aBtn.addEventListener("click", () => checkAnswer(aBtn, "a"));
-bBtn.addEventListener("click", () => checkAnswer(bBtn, "b"));
+aBtn.addEventListener("click", ()=>checkAnswer(aBtn,"a"));
+bBtn.addEventListener("click", ()=>checkAnswer(bBtn,"b"));
 
 loadQuestion();
 </script>
