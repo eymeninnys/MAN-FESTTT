@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manifest Quiz</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background-image: url('arkaplan.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+#quiz-container {
+    background-color: rgba(255,255,255,0.9);
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0px 5px 20px rgba(0,0,0,0.2);
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
+}
+h2 { margin-bottom: 20px; }
+.option-btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 8px;
+    background-color: #4CAF50;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.option-btn:hover { background-color: #45a049; }
+.option-btn.correct { background-color: #4CAF50; } /* yeşil */
+.option-btn.wrong { background-color: #f44336; }   /* kırmızı */
+#score {
+    font-size: 20px;
+    margin-top: 20px;
+    font-weight: bold;
+}
+</style>
+</head>
+<body>
+
+<div id="quiz-container">
+  <h2 id="question">Soru Yükleniyor...</h2>
+  <button class="option-btn" id="a">Seçenek A</button>
+  <button class="option-btn" id="b">Seçenek B</button>
+  <div id="score" style="display:none;">Puan: 0</div>
+</div>
+
+<script>
+let sorular = [
+    {soru: "Manifest grubu kaç kişiden oluşur?", a: "5", b: "6", dogru: "b"},
+    {soru: "Manifest hangi yıl kuruldu?", a: "2025", b: "2020", dogru: "a"},
+    {soru: "Manifest grubunun ilk şarkısı hangisidir?", a: "Zamansızdık", b: "Snap", dogru: "a"},
+    {soru: "Manifest hangi yarışma ile kuruldu?", a: "O Ses Türkiye", b: "Big5 Türkiye", dogru: "b"},
+    {soru: "Aşağıdakilerden hangisi Manifest üyesidir?", a: "Mina Solak", b: "Hadise", dogru: "a"},
+    {soru: "Manifest grubunun tarzı nedir?", a: "Pop / R&B", b: "Rock / Metal", dogru: "a"},
+    {soru: "Manifest’in ilk albümünün adı nedir?", a: "Manifestival", b: "Dreamland", dogru: "a"}
+];
+
+let currentQuestion = 0;
+let score = 0;
+
+const questionEl = document.getElementById("question");
+const aBtn = document.getElementById("a");
+const bBtn = document.getElementById("b");
+const scoreEl = document.getElementById("score");
+
+function loadQuestion() {
+    let q = sorular[currentQuestion];
+    questionEl.textContent = q.soru;
+    aBtn.textContent = "A: " + q.a;
+    bBtn.textContent = "B: " + q.b;
+
+    // Buton sınıflarını sıfırla
+    aBtn.className = "option-btn";
+    bBtn.className = "option-btn";
+
+    // Butonları aktif yap
+    aBtn.disabled = false;
+    bBtn.disabled = false;
+}
+
+function checkAnswer(selectedBtn, selectedKey) {
+    let correctKey = sorular[currentQuestion].dogru;
+
+    // Tüm butonları pasif yap
+    aBtn.disabled = true;
+    bBtn.disabled = true;
+
+    if(selectedKey === correctKey) {
+        selectedBtn.classList.add("correct");
+        score++;
+    } else {
+        selectedBtn.classList.add("wrong");
+        // doğru cevabı yeşile boyayalım
+        if(correctKey === "a") aBtn.classList.add("correct");
+        else bBtn.classList.add("correct");
+    }
+
+    // 1 saniye sonra otomatik geç
+    setTimeout(() => {
+        currentQuestion++;
+        if(currentQuestion < sorular.length) loadQuestion();
+        else showScore();
+    }, 1000);
+}
+
+function showScore() {
+    questionEl.textContent = "Quiz bitti!";
+    aBtn.style.display = "none";
+    bBtn.style.display = "none";
+    scoreEl.style.display = "block";
+    scoreEl.textContent = "Toplam Puan: " + score + "/" + sorular.length;
+}
+
+// Event listeners
+aBtn.addEventListener("click", () => checkAnswer(aBtn, "a"));
+bBtn.addEventListener("click", () => checkAnswer(bBtn, "b"));
+
+loadQuestion();
+</script>
+
+</body>
+</html>
