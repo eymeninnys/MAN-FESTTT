@@ -64,14 +64,14 @@ h2 { margin-bottom: 15px; }
 <audio id="wrongSound" src="wrong.mp3"></audio>
 
 <script>
-// Sorular
+// 20 soruluk düzeltilmiş sorular
 let sorular = [
 { soru:"Manifest grubu kaç kişiden oluşur?", a:"5", b:"6", dogru:"b"},
 { soru:"Manifest hangi yarışma ile kuruldu?", a:"O Ses Türkiye", b:"Big5 Türkiye", dogru:"b"},
 { soru:"Manifest’in ilk single’ı hangisidir?", a:"Zamansızdık", b:"Snap", dogru:"a"},
 { soru:"Manifest’in ilk albümünün adı nedir?", a:"Dreamland", b:"Manifestival", dogru:"b"},
 { soru:"Manifest çıkışını hangi yıl yaptı?", a:"2025", b:"2020", dogru:"a"},
-{ soru:"Aşağıdakilerden hangisi grup üyesidir?", a:"Zeynep Sude Oktay", b:"Hadise", dogru:"b"},
+{ soru:"Aşağıdakilerden hangisi grup üyesidir?", a:"Zeynep Sude Oktay", b:"Hadise", dogru:"a"}, // düzeltildi
 { soru:"Hayran kitlesine ne denir?", a:"maniFAM", b:"maniFANS", dogru:"a"},
 { soru:"Manifest’in yayınladığı bir single nedir?", a:"Arıyo", b:"Hej", dogru:"a"},
 { soru:"Manifest’in türü nedir?", a:"Pop / R&B", b:"Rock", dogru:"a"},
@@ -164,7 +164,7 @@ function showResult(){
 aBtn.addEventListener("click",()=>checkAnswer("a"));
 bBtn.addEventListener("click",()=>checkAnswer("b"));
 loadQuestion();
-
 </script>
+
 </body>
 </html>
